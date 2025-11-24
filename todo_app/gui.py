@@ -10,9 +10,9 @@ edit_button = fsg.Button("Edit")
 complete = fsg.Button("Complete")
 close = fsg.Button("Close App")
 
-window = fsg.Window('My To-do App',
-                    layout=[[label], [input_box, add_button], [list_box, edit_button], [complete], [close]],
-                    font=('Helvetica', 20))
+layout = [[label], [input_box, add_button], [list_box, edit_button], [complete], [close]]
+
+window = fsg.Window('My To-do App', layout=layout, font=('Helvetica', 20))
 # window.read() returns a tuple containing the event(e.g btn click) and a dictionary containing a key
 # and the value of the key is what is submitted in the input box. The default key starts from 0...
 # but it can be renamed by giving it an explicit value in the input_box

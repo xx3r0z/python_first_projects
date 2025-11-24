@@ -1,4 +1,5 @@
-names = ['he is a boy', 'she is a girl', 'they are having fun']
-index = names.index('he is a boy')
+import FreeSimpleGUI as fsg
+import inspect
 
-print(index)
+methods = [name for name, obj in inspect.getmembers(fsg) if inspect.isclass(obj) or inspect.isfunction(obj)]
+print(methods)
