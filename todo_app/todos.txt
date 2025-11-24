@@ -4,3 +4,6 @@ kettle
 go show places
 sprite
 slang
+fetch water
+buy books
+buy houses
