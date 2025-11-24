@@ -1,9 +1,5 @@
-flash
-paper
-kettle
-go show places
-sprite
-slang
-fetch water
-buy books
-buy houses
+paris
+travelling
+Thanksgiving
+charity
+houses
