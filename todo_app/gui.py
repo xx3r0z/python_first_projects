@@ -1,6 +1,10 @@
 import functions
 import FreeSimpleGUI as fsg
+import time
 
+fsg.theme("DarkTeal2")
+
+clock = fsg.Text('', key='clock')
 label = fsg.Text("Type in a todo")
 input_box = fsg.InputText(tooltip="Enter todo", key="todo")
 add_button = fsg.Button("Add")
@@ -10,7 +14,11 @@ edit_button = fsg.Button("Edit")
 complete = fsg.Button("Complete")
 close = fsg.Button("Close App")
 
-layout = [[label], [input_box, add_button], [list_box, edit_button], [complete], [close]]
+layout = [[clock],
+          [label],
+          [input_box, add_button],
+          [list_box, edit_button, complete],
+          [close]]
 
 window = fsg.Window('My To-do App', layout=layout, font=('Helvetica', 20))
 # window.read() returns a tuple containing the event(e.g btn click) and a dictionary containing a key
@@ -20,9 +28,11 @@ window = fsg.Window('My To-do App', layout=layout, font=('Helvetica', 20))
 #event, values represents the 2 content in the tuple so they can be worked on separately
 
 while True:
-    event, values = window.read()
+    event, values = window.read(timeout=200)
     print('Event: ', event)
     print("Values: ", values)
+
+    window['clock'].update(value=time.strftime("%b %d, %Y %H:%M:%S"))
 
     match event:
         case 'Add':
@@ -33,35 +43,48 @@ while True:
             functions.write_todos(todos)
 
             window['todosList'].update(values=todos)
+            window['todo'].update(value='')
 
         case 'Edit':
-            edit_todo = values['todosList'][0]
-            new_todo = values['todo']
+            try:
+                edit_todo = values['todosList'][0]
+                new_todo = values['todo']
 
-            todos = functions.open_todos()
+                todos = functions.open_todos()
 
-            index = todos.index(edit_todo)
-            print('index: ', index)
-            print('todos: ', todos)
-            print('edit todo: ', edit_todo)
-            todos[index] = new_todo + '\n'
+                index = todos.index(edit_todo)
+                print('index: ', index)
+                print('todos: ', todos)
+                print('edit todo: ', edit_todo)
+                todos[index] = new_todo + '\n'
 
-            functions.write_todos(todos)
+                functions.write_todos(todos)
 
-            window['todosList'].update(values=todos)
+                window['todosList'].update(values=todos)
+            except IndexError:
+                fsg.popup("Please select an item to edit!", font=('Helvetica', 20))
 
         case 'todosList':
             window['todo'].update(values['todosList'][0].strip('\n'))
 
         case 'Complete':
-            complete_todo = values['todosList'][0]
-            todos = functions.open_todos()
-            index = todos.index(complete_todo)
-            todos.pop(index)
+            try:
+                complete_todo = values['todosList'][0]
 
-            functions.write_todos(todos)
+                todos = functions.open_todos()
 
-            window['todosList'].update(values=todos)
+                index = todos.index(complete_todo)
+                todos.pop(index)
+
+                functions.write_todos(todos)
+
+                window['todosList'].update(values=todos)
+                window['todo'].update(value='')
+            except IndexError:
+                fsg.popup("Please select an item to complete!", font=('Helvetica', 20))
+
+        case 'Close App':
+            break
 
 
         case fsg.WIN_CLOSED:
