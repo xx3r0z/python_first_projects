@@ -1,17 +1,23 @@
 import functions
 import FreeSimpleGUI as fsg
 import time
+import os
+
+# To create the todos.txt file
+if not os.path.exists("todos.txt"):
+    with open("todos.txt", "w") as file:
+        pass
 
 fsg.theme("DarkTeal2")
 
 clock = fsg.Text('', key='clock')
 label = fsg.Text("Type in a todo")
 input_box = fsg.InputText(tooltip="Enter todo", key="todo")
-add_button = fsg.Button("Add")
+add_button = fsg.Button(size=5, key='Add', image_source='images/add.png', tooltip='Add todo')
 list_box = fsg.Listbox(values=functions.open_todos(), key='todosList',
                        enable_events=True, size=[45, 10])
 edit_button = fsg.Button("Edit")
-complete = fsg.Button("Complete")
+complete = fsg.Button('Complete')
 close = fsg.Button("Close App")
 
 layout = [[clock],
@@ -29,8 +35,6 @@ window = fsg.Window('My To-do App', layout=layout, font=('Helvetica', 20))
 
 while True:
     event, values = window.read(timeout=200)
-    print('Event: ', event)
-    print("Values: ", values)
 
     window['clock'].update(value=time.strftime("%b %d, %Y %H:%M:%S"))
 
